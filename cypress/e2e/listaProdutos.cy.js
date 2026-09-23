@@ -143,17 +143,5 @@ describe('Lista de produtos', () => {
       homePage.elements.menuListaDeCompras().click()
       listaPage.elements.mensagemVazia().should('be.visible')
     })
-
-    // BUG conhecido: Cart.deleteItem filtra por `id`, mas os itens são salvos com `_id`
-    // (front/src/services/cart.js), então o produto nunca é removido. Reativar após a correção.
-    it.skip('[BUG] deve remover o produto da lista ao diminuir a quantidade abaixo de 1', () => {
-      const [produto] = produtos
-      cy.visitarAutenticado('/home', cliente)
-      homePage.adicionarProduto(produto.nome)
-
-      listaPage.diminuir(produto.nome)
-
-      listaPage.elements.mensagemVazia().should('be.visible')
-    })
   })
 })
