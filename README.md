@@ -44,8 +44,8 @@ npm install
 │   ├── e2e/          # Especificações de teste (*.cy.js)
 │   ├── fixtures/     # Massa de dados estática
 │   └── support/
-│       ├── pages/       # Page Objects (ex.: LoginPage.js)
-│       ├── commands.js  # Comandos customizados (criarUsuario, excluirUsuario)
+│       ├── pages/       # Page Objects (LoginPage.js, CadastroPage.js)
+│       ├── commands.js  # Comandos customizados (gerarUsuario, criarUsuario, excluirUsuario)
 │       └── e2e.js       # Configurações globais carregadas antes dos testes
 ├── cypress.config.js # Configuração do Cypress (baseUrl, timeouts, etc.)
 ├── package.json
@@ -61,7 +61,14 @@ npm install
 - **Caminho não feliz:** campos em branco, email não cadastrado, senha incorreta, email em formato inválido (validação HTML5, sem chamada à API) e fechamento do alerta de erro
 - **Cadastro:** o botão Cadastre-se redireciona para `/cadastrarusuarios`
 
-Os usuários do caminho feliz são criados via API antes de cada teste e excluídos em seguida.
+### Cadastro (`cypress/e2e/cadastro.cy.js`)
+
+- **Elementos:** campos nome, email e senha, checkbox de administrador (desmarcado por padrão) e botão Cadastrar habilitados
+- **Caminho feliz:** cadastro de usuário comum (redireciona para `/home`) e de administrador (redireciona para `/admin/home`), validando o corpo da requisição e a mensagem de sucesso
+- **Caminho não feliz:** todos os campos vazios, sem nome, sem email, sem senha, email já cadastrado, email em formato inválido e fechamento do alerta de erro
+- **Navegação:** o link Entrar redireciona para `/login`
+
+Os usuários do caminho feliz são criados via API (ou pela própria tela, no cadastro) e excluídos ao final de cada teste.
 
 ## Configuração
 
@@ -76,7 +83,7 @@ As principais configurações ficam em `cypress.config.js`:
 
 - [x] Inicialização do projeto e configuração do Cypress
 - [x] Testes de login
-- [ ] Testes de cadastro de usuários
+- [x] Testes de cadastro de usuários
 - [ ] Testes de produtos (admin)
 - [ ] Comandos customizados e Page Objects
-- [ ] Relatórios e integração contínua (GitHub Actions)
+

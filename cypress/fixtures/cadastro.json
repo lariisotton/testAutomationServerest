@@ -1,0 +1,9 @@
+{
+  "mensagens": {
+    "sucesso": "Cadastro realizado com sucesso",
+    "nomeObrigatorio": "Nome é obrigatório",
+    "emailObrigatorio": "Email é obrigatório",
+    "senhaObrigatoria": "Password é obrigatório",
+    "emailEmUso": "Este email já está sendo usado"
+  }
+}
