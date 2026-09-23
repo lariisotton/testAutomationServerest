@@ -44,8 +44,8 @@ npm install
 │   ├── e2e/          # Especificações de teste (*.cy.js)
 │   ├── fixtures/     # Massa de dados estática
 │   └── support/
-│       ├── pages/       # Page Objects (LoginPage.js, CadastroPage.js)
-│       ├── commands.js  # Comandos customizados (gerarUsuario, criarUsuario, excluirUsuario)
+│       ├── pages/       # Page Objects (Login, Cadastro, Home, ListaProdutos)
+│       ├── commands.js  # Comandos customizados (usuários, produtos, login via API)
 │       └── e2e.js       # Configurações globais carregadas antes dos testes
 ├── cypress.config.js # Configuração do Cypress (baseUrl, timeouts, etc.)
 ├── package.json
@@ -68,6 +68,14 @@ npm install
 - **Caminho não feliz:** todos os campos vazios, sem nome, sem email, sem senha, email já cadastrado, email em formato inválido e fechamento do alerta de erro
 - **Navegação:** o link Entrar redireciona para `/login`
 
+### Lista de produtos (`cypress/e2e/listaProdutos.cy.js`)
+
+- **Caminho feliz:** login pela tela, adição de vários produtos pela home (botão `adicionarNaLista`) e validação de nome, quantidade e preço de cada um na lista; agrupamento do mesmo produto; botões + e −; limpar lista
+- **Caminho não feliz:** lista vazia, pesquisa sem resultado, acesso à home ou à lista sem login e lista zerada após logout
+- **Bug conhecido (teste pulado):** ao diminuir a quantidade de 1 para 0 o produto não é removido, porque `Cart.deleteItem` filtra por `id` em vez de `_id`
+
+Os produtos são criados via API com um administrador de teste e removidos no final.
+
 Os usuários do caminho feliz são criados via API (ou pela própria tela, no cadastro) e excluídos ao final de cada teste.
 
 ## Configuração
@@ -84,6 +92,7 @@ As principais configurações ficam em `cypress.config.js`:
 - [x] Inicialização do projeto e configuração do Cypress
 - [x] Testes de login
 - [x] Testes de cadastro de usuários
+- [x] Testes de lista de produtos (cliente)
 - [ ] Testes de produtos (admin)
-- [ ] Comandos customizados e Page Objects
+
 
