@@ -1,0 +1,17 @@
+{
+  "mensagens": {
+    "nomeObrigatorio": "Nome é obrigatório",
+    "precoObrigatorio": "Preco é obrigatório",
+    "descricaoObrigatoria": "Descricao é obrigatório",
+    "quantidadeObrigatoria": "Quantidade é obrigatório",
+    "precoPositivo": "Preco deve ser um número positivo",
+    "quantidadeMinima": "Quantidade deve ser maior ou igual a 0",
+    "nomeDuplicado": "Já existe produto com esse nome",
+    "rotaAdmin": "Rota exclusiva para administradores"
+  },
+  "produto": {
+    "preco": 250,
+    "descricao": "Headset gamer com microfone",
+    "quantidade": 15
+  }
+}
