@@ -1,0 +1,16 @@
+context
+
+# Dependências
+node_modules/
+
+# Artefatos do Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Variáveis locais
+cypress.env.json
+.env
+
+# Sistema
+.DS_Store

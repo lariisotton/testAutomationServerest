@@ -1,0 +1,25 @@
+{
+  "name": "teste-automacao-serverest",
+  "version": "1.0.0",
+  "description": "Testes E2E automatizados com Cypress para o front-end do ServeRest",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lariisotton/testAutomationServerest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lariisotton/testAutomationServerest/issues"
+  },
+  "homepage": "https://github.com/lariisotton/testAutomationServerest#readme",
+  "devDependencies": {
+    "cypress": "^16.1.0"
+  }
+}
