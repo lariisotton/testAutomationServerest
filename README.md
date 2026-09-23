@@ -44,26 +44,38 @@ npm install
 │   ├── e2e/          # Especificações de teste (*.cy.js)
 │   ├── fixtures/     # Massa de dados estática
 │   └── support/
-│       ├── commands.js  # Comandos customizados
+│       ├── pages/       # Page Objects (ex.: LoginPage.js)
+│       ├── commands.js  # Comandos customizados (criarUsuario, excluirUsuario)
 │       └── e2e.js       # Configurações globais carregadas antes dos testes
 ├── cypress.config.js # Configuração do Cypress (baseUrl, timeouts, etc.)
 ├── package.json
 └── README.md
 ```
 
+## Cenários cobertos
+
+### Login (`cypress/e2e/login.cy.js`)
+
+- **Elementos:** campos de email e senha (`data-testid`), botão Entrar e link Cadastre-se visíveis e habilitados
+- **Caminho feliz:** login de usuário comum (`/home`) e de administrador (`/admin/home`), login com Enter e token salvo no `localStorage`
+- **Caminho não feliz:** campos em branco, email não cadastrado, senha incorreta, email em formato inválido (validação HTML5, sem chamada à API) e fechamento do alerta de erro
+- **Cadastro:** o botão Cadastre-se redireciona para `/cadastrarusuarios`
+
+Os usuários do caminho feliz são criados via API antes de cada teste e excluídos em seguida.
+
 ## Configuração
 
 As principais configurações ficam em `cypress.config.js`:
 
 - `baseUrl`: `https://front.serverest.dev`
-- `env.apiUrl`: `https://serverest.dev` (usado para preparar massa de dados via API)
+- `expose.apiUrl`: `https://serverest.dev` (usado para preparar massa de dados via API, acessado com `Cypress.expose('apiUrl')`)
 
-Variáveis sensíveis podem ser definidas localmente em `cypress.env.json` (ignorado pelo Git).
+> No Cypress 16 o `Cypress.env()` foi removido: valores públicos ficam em `expose` e valores sensíveis devem ser lidos com `cy.env()`.
 
 ## Roadmap
 
 - [x] Inicialização do projeto e configuração do Cypress
-- [ ] Testes de login
+- [x] Testes de login
 - [ ] Testes de cadastro de usuários
 - [ ] Testes de produtos (admin)
 - [ ] Comandos customizados e Page Objects

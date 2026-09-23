@@ -1,0 +1,9 @@
+{
+  "mensagens": {
+    "credenciaisInvalidas": "Email e/ou senha inválidos",
+    "emailObrigatorio": "Email é obrigatório",
+    "senhaObrigatoria": "Password é obrigatório"
+  },
+  "emailNaoCadastrado": "nao.cadastrado.qa@teste.com",
+  "senhaInvalida": "SenhaErrada@999"
+}

@@ -11,7 +11,7 @@ module.exports = defineConfig({
     video: false,
     screenshotOnRunFailure: true,
   },
-  env: {
+  expose: {
     apiUrl: 'https://serverest.dev',
   },
 })
