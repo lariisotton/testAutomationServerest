@@ -137,13 +137,6 @@ As principais configurações ficam em `cypress.config.js`:
 
 > No Cypress 16 o `Cypress.env()` foi removido: valores públicos ficam em `expose` e valores sensíveis devem ser lidos com `cy.env()`.
 
-## Roadmap
 
-- [x] Inicialização do projeto e configuração do Cypress
-- [x] Testes de login
-- [x] Testes de cadastro de usuários
-- [x] Testes de lista de produtos (cliente)
-- [x] Testes de produtos (admin)
-- [x] Separação dos testes de front-end e back-end (API)
 
 
