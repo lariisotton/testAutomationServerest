@@ -1,6 +1,6 @@
-import loginPage from '../support/pages/LoginPage'
-import cadastroProdutoPage from '../support/pages/CadastroProdutoPage'
-import listaProdutosAdminPage from '../support/pages/ListaProdutosAdminPage'
+import loginPage from '../../support/pages/LoginPage'
+import cadastroProdutoPage from '../../support/pages/CadastroProdutoPage'
+import listaProdutosAdminPage from '../../support/pages/ListaProdutosAdminPage'
 
 describe('Produtos (admin)', () => {
   let dados
@@ -14,21 +14,18 @@ describe('Produtos (admin)', () => {
     ...sobrescrever,
   })
 
-  // Guarda o _id do produto criado pela tela para excluir no final
-  const aguardarCadastro = (statusEsperado) =>
+  const aguardarCadastro = () =>
     cy.wait('@cadastroProduto').then(({ response }) => {
       if (response.body._id) idsCriados.push(response.body._id)
-      if (statusEsperado) expect(response.statusCode).to.eq(statusEsperado)
-      return cy.wrap(response)
     })
 
   before(() => {
     cy.fixture('produtos').then((fixture) => {
       dados = fixture
     })
-    cy.criarUsuario(true).then((u) => {
+    cy.apiCriarUsuario(true).then((u) => {
       admin = u
-      cy.obterToken(admin).then((token) => {
+      cy.apiObterToken(admin).then((token) => {
         tokenAdmin = token
       })
     })
@@ -39,8 +36,8 @@ describe('Produtos (admin)', () => {
   })
 
   after(() => {
-    idsCriados.forEach((id) => cy.excluirProduto(tokenAdmin, id))
-    if (admin) cy.excluirUsuario(admin._id)
+    idsCriados.forEach((id) => cy.apiExcluirProduto(tokenAdmin, id))
+    if (admin) cy.apiExcluirUsuario(admin._id)
   })
 
   context('Login como administrador', () => {
@@ -137,7 +134,7 @@ describe('Produtos (admin)', () => {
       const produto = novoProduto()
       cadastroProdutoPage.cadastrar(produto)
 
-      aguardarCadastro(201).then(() => {
+      aguardarCadastro().then(() => {
         cy.get('@cadastroProduto').its('request.body').should('deep.include', {
           nome: produto.nome,
           preco: String(produto.preco),
@@ -155,7 +152,7 @@ describe('Produtos (admin)', () => {
       const produto = novoProduto({ imagem: 'cypress/fixtures/produto.png' })
       cadastroProdutoPage.cadastrar(produto)
 
-      aguardarCadastro(201)
+      aguardarCadastro()
       cy.get('@cadastroProduto').its('request.body.imagem').should('contain', 'produto.png')
       cy.location('pathname').should('eq', '/admin/listarprodutos')
       listaProdutosAdminPage.linhaDoProduto(produto.nome).should('contain.text', 'produto.png')
@@ -165,20 +162,11 @@ describe('Produtos (admin)', () => {
       const produto = novoProduto({ quantidade: 0 })
       cadastroProdutoPage.cadastrar(produto)
 
-      aguardarCadastro(201)
+      aguardarCadastro()
       cy.location('pathname').should('eq', '/admin/listarprodutos')
       listaProdutosAdminPage.validarProduto(produto)
     })
 
-    it('deve disponibilizar o produto cadastrado para o cliente', () => {
-      const produto = novoProduto()
-      cadastroProdutoPage.cadastrar(produto)
-      aguardarCadastro(201)
-
-      cy.request(`${Cypress.expose('apiUrl')}/produtos?nome=${encodeURIComponent(produto.nome)}`)
-        .its('body.produtos')
-        .should('have.length', 1)
-    })
   })
 
   context('Caminho não feliz', () => {
@@ -189,7 +177,7 @@ describe('Produtos (admin)', () => {
     it('deve exibir erros de todos os campos obrigatórios ao cadastrar vazio', () => {
       cadastroProdutoPage.submeter()
 
-      aguardarCadastro(400)
+      aguardarCadastro()
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.nomeObrigatorio)
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.precoObrigatorio)
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.descricaoObrigatoria)
@@ -210,7 +198,7 @@ describe('Produtos (admin)', () => {
         const produto = novoProduto({ [campo]: undefined })
         cadastroProdutoPage.cadastrar(produto)
 
-        aguardarCadastro(400)
+        aguardarCadastro()
         cadastroProdutoPage.validarAlertaErro(dados.mensagens[mensagem])
         cadastroProdutoPage.elements.alertasErro().should('have.length', 1)
       })
@@ -219,21 +207,21 @@ describe('Produtos (admin)', () => {
     it('não deve cadastrar com preço zero', () => {
       cadastroProdutoPage.cadastrar(novoProduto({ preco: 0 }))
 
-      aguardarCadastro(400)
+      aguardarCadastro()
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.precoPositivo)
     })
 
     it('não deve cadastrar com preço negativo', () => {
       cadastroProdutoPage.cadastrar(novoProduto({ preco: -10 }))
 
-      aguardarCadastro(400)
+      aguardarCadastro()
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.precoPositivo)
     })
 
     it('não deve cadastrar com quantidade negativa', () => {
       cadastroProdutoPage.cadastrar(novoProduto({ quantidade: -1 }))
 
-      aguardarCadastro(400)
+      aguardarCadastro()
       cadastroProdutoPage.validarAlertaErro(dados.mensagens.quantidadeMinima)
     })
 
@@ -249,12 +237,12 @@ describe('Produtos (admin)', () => {
 
     it('não deve cadastrar produto com nome já existente', () => {
       const produto = novoProduto()
-      cy.criarProduto(tokenAdmin, produto).then(({ _id }) => {
+      cy.apiCriarProduto(tokenAdmin, produto).then(({ _id }) => {
         idsCriados.push(_id)
 
         cadastroProdutoPage.cadastrar(produto)
 
-        aguardarCadastro(400)
+        aguardarCadastro()
         cadastroProdutoPage.validarAlertaErro(dados.mensagens.nomeDuplicado)
         cy.location('pathname').should('eq', '/admin/cadastrarprodutos')
       })
@@ -262,7 +250,7 @@ describe('Produtos (admin)', () => {
 
     it('deve fechar a mensagem de erro ao clicar no X', () => {
       cadastroProdutoPage.submeter()
-      aguardarCadastro(400)
+      aguardarCadastro()
 
       cadastroProdutoPage.elements.alertasErro().should('have.length', 4)
       cy.get('.btn-close-error-alert').first().click()
@@ -277,18 +265,16 @@ describe('Produtos (admin)', () => {
     })
 
     it('não deve permitir que um usuário comum cadastre produtos', () => {
-      cy.criarUsuario(false).then((cliente) => {
+      cy.apiCriarUsuario(false).then((cliente) => {
         cy.visitarAutenticado('/admin/cadastrarprodutos', cliente)
         const produto = novoProduto()
         cadastroProdutoPage.cadastrar(produto)
 
-        aguardarCadastro(403)
+        aguardarCadastro()
         cadastroProdutoPage.validarAlertaErro(dados.mensagens.rotaAdmin)
-        cy.request(`${Cypress.expose('apiUrl')}/produtos?nome=${encodeURIComponent(produto.nome)}`)
-          .its('body.produtos')
-          .should('have.length', 0)
+        cy.location('pathname').should('eq', '/admin/cadastrarprodutos')
 
-        cy.excluirUsuario(cliente._id)
+        cy.apiExcluirUsuario(cliente._id)
       })
     })
   })

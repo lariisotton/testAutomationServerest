@@ -1,6 +1,6 @@
-import loginPage from '../support/pages/LoginPage'
-import homePage from '../support/pages/HomePage'
-import listaPage from '../support/pages/ListaProdutosPage'
+import loginPage from '../../support/pages/LoginPage'
+import homePage from '../../support/pages/HomePage'
+import listaPage from '../../support/pages/ListaProdutosPage'
 
 describe('Lista de produtos', () => {
   const sufixo = `${Date.now()}`
@@ -16,24 +16,24 @@ describe('Lista de produtos', () => {
   let produtos = []
 
   before(() => {
-    cy.criarUsuario(true).then((u) => {
+    cy.apiCriarUsuario(true).then((u) => {
       admin = u
-      cy.obterToken(admin).then((token) => {
+      cy.apiObterToken(admin).then((token) => {
         tokenAdmin = token
         produtosBase.forEach((p) => {
-          cy.criarProduto(tokenAdmin, p).then((criado) => produtos.push(criado))
+          cy.apiCriarProduto(tokenAdmin, p).then((criado) => produtos.push(criado))
         })
       })
     })
-    cy.criarUsuario(false).then((u) => {
+    cy.apiCriarUsuario(false).then((u) => {
       cliente = u
     })
   })
 
   after(() => {
-    produtos.forEach(({ _id }) => cy.excluirProduto(tokenAdmin, _id))
-    if (cliente) cy.excluirUsuario(cliente._id)
-    if (admin) cy.excluirUsuario(admin._id)
+    produtos.forEach(({ _id }) => cy.apiExcluirProduto(tokenAdmin, _id))
+    if (cliente) cy.apiExcluirUsuario(cliente._id)
+    if (admin) cy.apiExcluirUsuario(admin._id)
   })
 
   context('Caminho feliz', () => {

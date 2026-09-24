@@ -1,4 +1,4 @@
-import loginPage from '../support/pages/LoginPage'
+import loginPage from '../../support/pages/LoginPage'
 
 describe('Login', () => {
   let dados
@@ -56,15 +56,15 @@ describe('Login', () => {
     let usuario
 
     afterEach(() => {
-      if (usuario) cy.excluirUsuario(usuario._id)
+      if (usuario) cy.apiExcluirUsuario(usuario._id)
     })
 
     it('deve logar um usuário comum e redirecionar para a home', () => {
-      cy.criarUsuario(false).then((u) => {
+      cy.apiCriarUsuario(false).then((u) => {
         usuario = u
         loginPage.logar(u.email, u.password)
 
-        cy.wait('@login').its('response.statusCode').should('eq', 200)
+        cy.wait('@login')
         cy.location('pathname').should('eq', '/home')
         cy.contains('h1', 'Serverest Store').should('be.visible')
         cy.get('[data-testid="logout"]').should('be.visible')
@@ -75,11 +75,11 @@ describe('Login', () => {
     })
 
     it('deve logar um usuário administrador e redirecionar para a home admin', () => {
-      cy.criarUsuario(true).then((u) => {
+      cy.apiCriarUsuario(true).then((u) => {
         usuario = u
         loginPage.logar(u.email, u.password)
 
-        cy.wait('@login').its('response.statusCode').should('eq', 200)
+        cy.wait('@login')
         cy.location('pathname').should('eq', '/admin/home')
         cy.contains('h1', `Bem Vindo ${u.nome}`).should('be.visible')
         cy.get('[data-testid="logout"]').should('be.visible')
@@ -87,12 +87,12 @@ describe('Login', () => {
     })
 
     it('deve submeter o login ao pressionar Enter no campo de senha', () => {
-      cy.criarUsuario(false).then((u) => {
+      cy.apiCriarUsuario(false).then((u) => {
         usuario = u
         loginPage.preencherEmail(u.email)
         loginPage.elements.senha().type(`${u.password}{enter}`, { log: false })
 
-        cy.wait('@login').its('response.statusCode').should('eq', 200)
+        cy.wait('@login')
         cy.location('pathname').should('eq', '/home')
       })
     })
@@ -102,7 +102,7 @@ describe('Login', () => {
     it('não deve logar com email e senha em branco', () => {
       loginPage.submeter()
 
-      cy.wait('@login').its('response.statusCode').should('eq', 400)
+      cy.wait('@login')
       loginPage.validarAlerta(dados.mensagens.emailObrigatorio)
       loginPage.validarAlerta(dados.mensagens.senhaObrigatoria)
       cy.location('pathname').should('eq', '/login')
@@ -112,7 +112,7 @@ describe('Login', () => {
       loginPage.preencherSenha(dados.senhaInvalida)
       loginPage.submeter()
 
-      cy.wait('@login').its('response.statusCode').should('eq', 400)
+      cy.wait('@login')
       loginPage.validarAlerta(dados.mensagens.emailObrigatorio)
       loginPage.elements.alertas().should('have.length', 1)
       cy.location('pathname').should('eq', '/login')
@@ -122,7 +122,7 @@ describe('Login', () => {
       loginPage.preencherEmail(dados.emailNaoCadastrado)
       loginPage.submeter()
 
-      cy.wait('@login').its('response.statusCode').should('eq', 400)
+      cy.wait('@login')
       loginPage.validarAlerta(dados.mensagens.senhaObrigatoria)
       loginPage.elements.alertas().should('have.length', 1)
       cy.location('pathname').should('eq', '/login')
@@ -131,19 +131,19 @@ describe('Login', () => {
     it('não deve logar com email não cadastrado', () => {
       loginPage.logar(dados.emailNaoCadastrado, dados.senhaInvalida)
 
-      cy.wait('@login').its('response.statusCode').should('eq', 401)
+      cy.wait('@login')
       loginPage.validarAlerta(dados.mensagens.credenciaisInvalidas)
       cy.location('pathname').should('eq', '/login')
     })
 
     it('não deve logar com senha incorreta', () => {
-      cy.criarUsuario(false).then((u) => {
+      cy.apiCriarUsuario(false).then((u) => {
         loginPage.logar(u.email, dados.senhaInvalida)
 
-        cy.wait('@login').its('response.statusCode').should('eq', 401)
+        cy.wait('@login')
         loginPage.validarAlerta(dados.mensagens.credenciaisInvalidas)
         cy.location('pathname').should('eq', '/login')
-        cy.excluirUsuario(u._id)
+        cy.apiExcluirUsuario(u._id)
       })
     })
 

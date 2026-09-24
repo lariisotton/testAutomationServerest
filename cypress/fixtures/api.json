@@ -1,0 +1,16 @@
+{
+  "mensagens": {
+    "loginSucesso": "Login realizado com sucesso",
+    "credenciaisInvalidas": "Email e/ou senha inválidos",
+    "cadastroSucesso": "Cadastro realizado com sucesso",
+    "alteracaoSucesso": "Registro alterado com sucesso",
+    "exclusaoSucesso": "Registro excluído com sucesso",
+    "nenhumaExclusao": "Nenhum registro excluído",
+    "emailEmUso": "Este email já está sendo usado",
+    "usuarioNaoEncontrado": "Usuário não encontrado",
+    "produtoNaoEncontrado": "Produto não encontrado",
+    "produtoDuplicado": "Já existe produto com esse nome",
+    "tokenInvalido": "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais",
+    "rotaAdmin": "Rota exclusiva para administradores"
+  }
+}

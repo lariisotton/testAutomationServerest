@@ -2,7 +2,6 @@ class HomePage {
   elements = {
     pesquisar: () => cy.get('[data-testid="pesquisar"]'),
     botaoPesquisar: () => cy.get('[data-testid="botaoPesquisar"]'),
-    cards: () => cy.get('.card'),
     adicionarNaLista: () => cy.get('[data-testid="adicionarNaLista"]'),
     menuListaDeCompras: () => cy.get('[data-testid="lista-de-compras"]'),
     logout: () => cy.get('[data-testid="logout"]'),

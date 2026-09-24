@@ -1,4 +1,4 @@
-import cadastroPage from '../support/pages/CadastroPage'
+import cadastroPage from '../../support/pages/CadastroPage'
 
 describe('Cadastro de usuários', () => {
   let dados
@@ -17,7 +17,7 @@ describe('Cadastro de usuários', () => {
   })
 
   afterEach(() => {
-    if (idCriado) cy.excluirUsuario(idCriado)
+    if (idCriado) cy.apiExcluirUsuario(idCriado)
   })
 
   context('Elementos da página', () => {
@@ -79,7 +79,6 @@ describe('Cadastro de usuários', () => {
 
         cy.wait('@cadastro').then(({ request, response }) => {
           idCriado = response.body._id
-          expect(response.statusCode).to.eq(201)
           expect(request.body).to.deep.eq({
             nome: usuario.nome,
             email: usuario.email,
@@ -100,7 +99,6 @@ describe('Cadastro de usuários', () => {
 
         cy.wait('@cadastro').then(({ request, response }) => {
           idCriado = response.body._id
-          expect(response.statusCode).to.eq(201)
           expect(request.body.administrador).to.eq('true')
         })
 
@@ -115,7 +113,7 @@ describe('Cadastro de usuários', () => {
     it('deve exibir erros de todos os campos obrigatórios ao salvar vazio', () => {
       cadastroPage.submeter()
 
-      cy.wait('@cadastro').its('response.statusCode').should('eq', 400)
+      cy.wait('@cadastro')
       cadastroPage.validarAlertaErro(dados.mensagens.nomeObrigatorio)
       cadastroPage.validarAlertaErro(dados.mensagens.emailObrigatorio)
       cadastroPage.validarAlertaErro(dados.mensagens.senhaObrigatoria)
@@ -127,7 +125,7 @@ describe('Cadastro de usuários', () => {
       cy.gerarUsuario().then(({ email, password }) => {
         cadastroPage.cadastrar({ email, password })
 
-        cy.wait('@cadastro').its('response.statusCode').should('eq', 400)
+        cy.wait('@cadastro')
         cadastroPage.validarAlertaErro(dados.mensagens.nomeObrigatorio)
         cadastroPage.elements.alertasErro().should('have.length', 1)
       })
@@ -137,7 +135,7 @@ describe('Cadastro de usuários', () => {
       cy.gerarUsuario().then(({ nome, password }) => {
         cadastroPage.cadastrar({ nome, password })
 
-        cy.wait('@cadastro').its('response.statusCode').should('eq', 400)
+        cy.wait('@cadastro')
         cadastroPage.validarAlertaErro(dados.mensagens.emailObrigatorio)
         cadastroPage.elements.alertasErro().should('have.length', 1)
       })
@@ -147,20 +145,20 @@ describe('Cadastro de usuários', () => {
       cy.gerarUsuario().then(({ nome, email }) => {
         cadastroPage.cadastrar({ nome, email })
 
-        cy.wait('@cadastro').its('response.statusCode').should('eq', 400)
+        cy.wait('@cadastro')
         cadastroPage.validarAlertaErro(dados.mensagens.senhaObrigatoria)
         cadastroPage.elements.alertasErro().should('have.length', 1)
       })
     })
 
     it('não deve cadastrar com email já utilizado', () => {
-      cy.criarUsuario(false).then((existente) => {
+      cy.apiCriarUsuario(false).then((existente) => {
         cadastroPage.cadastrar({ nome: 'Outro Nome', email: existente.email, password: 'Outra@123' })
 
-        cy.wait('@cadastro').its('response.statusCode').should('eq', 400)
+        cy.wait('@cadastro')
         cadastroPage.validarAlertaErro(dados.mensagens.emailEmUso)
         cy.location('pathname').should('eq', '/cadastrarusuarios')
-        cy.excluirUsuario(existente._id)
+        cy.apiExcluirUsuario(existente._id)
       })
     })
 

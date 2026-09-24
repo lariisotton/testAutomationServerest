@@ -1,7 +1,6 @@
 class ListaProdutosAdminPage {
   elements = {
     titulo: () => cy.contains('h1', 'Lista dos Produtos'),
-    linhas: () => cy.get('table tbody tr'),
   }
 
   linhaDoProduto(nome) {

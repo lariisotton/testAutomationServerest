@@ -5,7 +5,11 @@
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test": "cypress run"
+    "cy:run:front": "cypress run --spec \"cypress/e2e/front/**/*.cy.js\"",
+    "cy:run:api": "cypress run --spec \"cypress/e2e/api/**/*.cy.js\"",
+    "test": "cypress run",
+    "test:front": "npm run cy:run:front",
+    "test:api": "npm run cy:run:api"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,7 @@
   },
   "homepage": "https://github.com/lariisotton/testAutomationServerest#readme",
   "devDependencies": {
-    "cypress": "^16.1.0"
+    "cypress": "^16.1.0",
+    "cypress-plugin-api": "^2.12.3"
   }
 }

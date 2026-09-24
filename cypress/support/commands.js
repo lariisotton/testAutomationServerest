@@ -1,6 +1,5 @@
 const apiUrl = () => Cypress.expose('apiUrl')
 
-// Gera dados únicos de usuário (sem criar na API)
 Cypress.Commands.add('gerarUsuario', (administrador = false) => {
   return cy.wrap({
     nome: 'QA Automação',
@@ -10,8 +9,7 @@ Cypress.Commands.add('gerarUsuario', (administrador = false) => {
   })
 })
 
-// Cria um usuário via API e devolve { nome, email, password, administrador, _id }
-Cypress.Commands.add('criarUsuario', (administrador = false) => {
+Cypress.Commands.add('apiCriarUsuario', (administrador = false) => {
   return cy.gerarUsuario(administrador).then((usuario) =>
     cy
       .request('POST', `${apiUrl()}/usuarios`, { ...usuario, administrador: String(administrador) })
@@ -22,7 +20,7 @@ Cypress.Commands.add('criarUsuario', (administrador = false) => {
   )
 })
 
-Cypress.Commands.add('excluirUsuario', (id) => {
+Cypress.Commands.add('apiExcluirUsuario', (id) => {
   cy.request({
     method: 'DELETE',
     url: `${apiUrl()}/usuarios/${id}`,
@@ -30,16 +28,14 @@ Cypress.Commands.add('excluirUsuario', (id) => {
   })
 })
 
-// Faz login via API e devolve o token (Bearer ...)
-Cypress.Commands.add('obterToken', ({ email, password }) => {
+Cypress.Commands.add('apiObterToken', ({ email, password }) => {
   return cy
     .request('POST', `${apiUrl()}/login`, { email, password })
     .its('body.authorization')
 })
 
-// Visita uma rota já autenticado, injetando o token no localStorage
 Cypress.Commands.add('visitarAutenticado', (rota, usuario) => {
-  cy.obterToken(usuario).then((token) => {
+  cy.apiObterToken(usuario).then((token) => {
     cy.visit(rota, {
       onBeforeLoad(win) {
         win.localStorage.setItem('serverest/userEmail', usuario.email)
@@ -49,8 +45,7 @@ Cypress.Commands.add('visitarAutenticado', (rota, usuario) => {
   })
 })
 
-// Cria um produto via API (requer token de administrador)
-Cypress.Commands.add('criarProduto', (token, produto) => {
+Cypress.Commands.add('apiCriarProduto', (token, produto) => {
   return cy
     .request({
       method: 'POST',
@@ -64,7 +59,7 @@ Cypress.Commands.add('criarProduto', (token, produto) => {
     })
 })
 
-Cypress.Commands.add('excluirProduto', (token, id) => {
+Cypress.Commands.add('apiExcluirProduto', (token, id) => {
   cy.request({
     method: 'DELETE',
     url: `${apiUrl()}/produtos/${id}`,
